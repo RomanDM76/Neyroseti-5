@@ -1,0 +1,111 @@
+Отчет по IMD
+
+Прогон 1 
+batch = 50 
+
+Train on 25000 samples, validate on 25000 samples
+Epoch 1/50
+25000/25000 [==============================] - 189s 8ms/step - loss: 0.4576 - accuracy: 0.7828 - val_loss: 0.3798 - val_accuracy: 0.8365
+Epoch 2/50
+25000/25000 [==============================] - 187s accuracy: 0.8774 - val_loss: 0.4354 - val_accuracy:
+..................
+Epoch 22/50
+25000/25000 [==============================] - 180s 7ms/step - loss: 0.0034 - accuracy: 0.9990 - val_loss: 1.3458 - val_accuracy: 0.8089
+
+Прогон 2
+batch = 128
+Добавил скрытый слой
+model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(64)) # прогон 2
+model.add(Dense(1, activation='sigmoid'))
+
+Train on 25000 samples, validate on 25000 samples
+Epoch 1/50
+25000/25000 [==============================] - 92s 4ms/step - loss: 0.4663 - accuracy: 0.7741 - val_loss: 0.3724 - val_accuracy: 0.8378
+  Epoch 2/50
+25000/25000 [==============================] - 88s 4ms/step - loss: 0.3016 - accuracy: 0.8779 - val_loss: 0.3827  - val_accuracy: 0.8317
+.................
+Epoch 22/50
+25000/25000 [==============================] - 90s 4ms/step - loss: 0.0144 - accuracy: 0.9951 - val_loss: 1.4102 - val_accuracy: 0.7956
+
+Скорость обучения выросла из-за увеличения batch_size.
+Точность несколько уменьшилась из-за добывления скрытого слоя.
+Возможно при использовании большго количества эпох обучения этот вариант
+ будет лучше 1го варианта.
+ 
+Прогон 3
+batch = 128
+Применил другую функцию активации в скрытом слое
+model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(64, activation='sigmoid')) # прогон 2
+model.add(Dense(1, activation='sigmoid'))
+
+Train on 25000 samples, validate on 25000 samples
+Epoch 1/50
+25000/25000 [==============================] - 93s 4ms/step - loss: 0.4919 - accuracy: 0.7558 - val_loss: 0.3880 - val_accuracy: 0.8283
+................
+Epoch 22/50
+25000/25000 [==============================] - 90s 4ms/step - loss: 0.0140 - accuracy: 0.9956 - val_loss: 1.0492 - val_accuracy: 0.8054
+
+Это не оказало положительного влияния на результат.
+
+Прогон 4
+
+optimizer='adam'
+model.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2))
+Train on 25000 samples, validate on 25000 samples
+Epoch 1/50
+25000/25000 [==============================] - 260s 10ms/step - loss: 0.4649 - accuracy: 0.7786 - val_loss: 0.3627 - val_accuracy: 0.8434
+Epoch 2/50
+25000/25000 [==============================] - 266s 11ms/step - loss: 0.3030 - accuracy: 0.8782 - val_loss: 0.3941 - val_accuracy: 0.8188
+........................
+Epoch 20/50
+25000/25000 [==============================] - 269s 11ms/step - loss: 0.0150 - accuracy: 0.9950 - val_loss: 1.0411 - val_accuracy: 0.8069
+
+Увеличение количества нейронов в слое lstm ухудшило результат.
+Но это позволит лучше оценивать отличия в моделях, сформированных
+путем изменения других параметров.
+
+Прогон 5
+Изменяем функцию потерь loss='mean_squared_error'
+model.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2))
+
+Train on 25000 samples, validate on 25000 samples
+Epoch 1/50
+25000/25000 [==============================] - 208s 8ms/step - loss: 0.1597 - accuracy: 0.7669 - val_loss: 0.1164 - val_accuracy: 0.8381
+Epoch 2/50
+25000/25000 [==============================] - 207s 8ms/step - loss: 0.0918 - accuracy: 0.8774 - val_loss: 0.1173 - val_accuracy: 0.8374
+....................
+Epoch 14/50
+25000/25000 [==============================] - 212s 8ms/step - loss: 0.0158 - accuracy: 0.9819 - val_loss: 0.1670 - val_accuracy: 0.8080
+
+Результат значительно улучшился.
+
+Прогон 6
+loss='binary_crossentropy'
+optimizer='RMSprop'
+
+Train on 25000 samples, validate on 25000 samples
+Epoch 1/50
+25000/25000 [==============================] - 260s 10ms/step - loss: 0.5299 - accuracy: 0.7480 - val_loss: 0.4079 - val_accuracy: 0.8210
+Epoch 2/50
+25000/25000 [==============================] - 265s 11ms/step - loss: 0.3503 - accuracy: 0.8562 - val_loss: 0.4163 - val_accuracy: 0.8216
+........................
+Epoch 21/50
+25000/25000 [==============================] - 274s 11ms/step - loss: 0.0226 - accuracy: 0.9922 - val_loss: 0.9835 - val_accuracy: 0.8084
+
+Прогон 7
+batch = 128
+model.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2))
+optimizer='SGD'
+
+Train on 25000 samples, validate on 25000 samples
+Epoch 1/50
+25000/25000 [==============================] - 229s 9ms/step - loss: 0.6930 - accuracy: 0.5161 - val_loss: 0.6929 - val_accuracy: 0.5290
+Epoch 2/50
+25000/25000 [==============================] - 205s 8ms/step - loss: 0.6929 - accuracy: 0.5162 - val_loss: 0.6929 - val_accuracy: 0.5341
+...................
+Epoch 22/50
+25000/25000 [==============================] - 201s 8ms/step - loss: 0.6921 - accuracy: 0.5637 - val_loss: 0.6921 - val_accuracy: 0.5591
+
+Точность значительно упала и потери возрасли.
